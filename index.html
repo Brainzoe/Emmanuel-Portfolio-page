@@ -1,3 +1,5 @@
+<!-- index.html -->
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -6,6 +8,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Emmanuel Nwachukwu - Portfolio</title>
   <script src="https://cdn.tailwindcss.com"></script>
+ 
 </head>
 
 <body class="bg-gray-50 text-gray-800 font-sans">
@@ -23,34 +26,23 @@
           class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded">Email</a>
         <a href="https://www.linkedin.com/in/emmanuel-nwachukwu-8a6645101" target="_blank"
           class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">LinkedIn</a>
-        <!-- ✅ Download Resume Button -->
-        <a href="resume.html" target="_blank" class="bg-yellow-500 hover:bg-yellow-600 px-4 py-2 rounded">⬇️ Download
-          Resume</a>
+
+        <!-- View Resume Online -->
+        <a href="resume.html" target="_blank" class="bg-purple-500 hover:bg-purple-600 px-4 py-2 rounded">
+          📄 View Resume
+        </a>
+
+        <!-- Download Resume PDF -->
+        <button onclick="downloadResume()"
+          class="bg-yellow-500 hover:bg-yellow-600 px-4 py-2 rounded text-white font-medium">
+          ⬇️ Download Resume
+        </button>
+
       </div>
+
       <p class="mt-3 text-sm">📍 Lagos, Nigeria | 📞 +2349163424491</p>
     </div>
   </header>
-
-  <!-- Header / Hero -->
-  <!-- <header class="bg-blue-900 text-white py-12">
-    <div class="container mx-auto px-6 text-center">
-      <!-- Profile Picture -->
-  <!-- <div class="flex justify-center mb-6">
-        <img 
-          src="./profile pic.jpg" 
-          alt="Emmanuel Nwachukwu" 
-          class="w-32 h-32 rounded-full border-4 border-white shadow-lg"
-        />
-      </div>
-      <h1 class="text-4xl font-bold">Emmanuel Nwachukwu</h1>
-      <p class="mt-2 text-lg">IT Support Assistant | Customer Support Associate</p>
-      <div class="mt-4 space-x-4">
-        <a href="mailto:nwachukwuemmanuel62@gmail.com" class="bg-green-500 hover:bg-green-600 px-4 py-2 rounded">Email</a>
-        <a href="https://www.linkedin.com/in/emmanuel-nwachukwu-8a6645101" target="_blank" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded">LinkedIn</a>
-      </div>
-      <p class="mt-3 text-sm">📍 Lagos, Nigeria | 📞 +2349163424491</p>
-    </div>
-  </header> --> -->
 
   <!-- Professional Summary -->
   <section class="py-12 container mx-auto px-6">
@@ -183,6 +175,51 @@
   <footer class="bg-blue-900 text-white py-4 text-center">
     <p>&copy; 2025 Emmanuel Nwachukwu. All rights reserved.</p>
   </footer>
+
+
+  <!-- Load html2pdf.js (keep only one include) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+  <script>
+    async function downloadResume() {
+      try {
+        const res = await fetch('resume.html');
+        if (!res.ok) throw new Error("resume.html not found.");
+        const html = await res.text();
+  
+        // Parse resume.html and extract only the content inside #resume
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        const resumeContent = doc.getElementById("resume");
+  
+        if (!resumeContent) throw new Error("No #resume section found in resume.html");
+  
+        // Clone the resume content into a hidden container
+        const container = document.createElement("div");
+        container.style.position = "absolute";
+        container.style.left = "-9999px";
+        container.appendChild(resumeContent.cloneNode(true));
+        document.body.appendChild(container);
+  
+        // Generate PDF
+        await html2pdf().from(container).set({
+          margin: 0.5,
+          filename: "Emmanuel-Nwachukwu-Resume.pdf",
+          image: { type: "jpeg", quality: 0.98 },
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
+        }).save();
+  
+        document.body.removeChild(container);
+  
+      } catch (err) {
+        console.error(err);
+        alert("❌ Could not generate PDF. Check console for details.");
+      }
+    }
+  </script>
+  
+  
+
 </body>
 
 </html>
