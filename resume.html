@@ -7,7 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Emmanuel Nwachukwu - Resume</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
+    <!-- Add html2pdf.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         @media print {
             .no-print {
@@ -182,6 +183,20 @@
 
     </div> <!-- /#resume -->
 
+    <script>
+        window.addEventListener("load", () => {
+          const resumeContent = document.getElementById("resume");
+    
+          // Auto-generate PDF when page loads
+          html2pdf().from(resumeContent).set({
+            margin: 0.5,
+            filename: "Emmanuel-Nwachukwu-Resume.pdf",
+            image: { type: "jpeg", quality: 0.98 },
+            html2canvas: { scale: 2, useCORS: true },
+            jsPDF: { unit: "in", format: "a4", orientation: "portrait" }
+          }).save();
+        });
+      </script>
 </body>
 
 </html>
